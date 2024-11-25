@@ -98,6 +98,7 @@ for company in selected_companies:
 
         if cnt%100 == 0:
             print(f"Predicted {cnt} days of sentiments for {company}")
+        cnt += 1
 
     results = pd.DataFrame(results_dic)
     results.to_csv(f"./sentiments/{company}_sentiment.csv", index=False)
