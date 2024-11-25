@@ -29,10 +29,10 @@ def get_tweets(ticker, date_str):
                     tweets.append(tweet_obj['text'])
         return tweets
 
-apple_daily_tweets = {}
-for date_str in sorted(os.listdir(f"{tweet_dir}{selected_companies[0]}")):
-    apple_daily_tweets[date_str] = get_tweets(selected_companies[0], date_str)
-print("Number of days of Apple tweets: ", len(apple_daily_tweets))
+# apple_daily_tweets = {}
+# for date_str in sorted(os.listdir(f"{tweet_dir}{selected_companies[0]}")):
+#     apple_daily_tweets[date_str] = get_tweets(selected_companies[0], date_str)
+# print("Number of days of Apple tweets: ", len(apple_daily_tweets))
 
 coca_daily_tweets = {}
 for date_str in sorted(os.listdir(f"{tweet_dir}{selected_companies[1]}")):
@@ -69,20 +69,21 @@ gen_model = genai.GenerativeModel(
 
 results = pd.DataFrame(columns=["ticker", "date_of_tweets", "prediction", "confidence"])
 
-for date, tweets in apple_daily_tweets.items():
-    ticker = "AAPL"
-    current_tweet = " ".join(tweets)
-    company_name = f"Apple Inc. ({ticker})"
-    prompt = f"Predict the next-day price movement of the stock for {company_name} based on the following tweets. Your prediction should be binary, 1 for positive price movement and 0 for negative price movement. Only give the prediction as your response, nothing else. Here are the tweets from today: {current_tweet}\n"
-    response = gen_model.generate_content([prompt])
-    results = pd.concat([results, pd.DataFrame([{
-        "ticker": ticker,
-        "date_of_tweets": date,
-        "prediction": response.text,
-        "confidence": np.exp(response.candidates[0].avg_logprobs)
-    }])], ignore_index=True)
-    time.sleep(2)
-    print(date, response.text, np.exp(response.candidates[0].avg_logprobs))
+# for date, tweets in apple_daily_tweets.items():
+#     ticker = "AAPL"
+#     current_tweet = " ".join(tweets)
+#     company_name = f"Apple Inc. ({ticker})"
+#     prompt = f"Predict the next-day price movement of the stock for {company_name} based on the following tweets. Your prediction should be binary, 1 for positive price movement and 0 for negative price movement. Only give the prediction as your response, nothing else. Here are the tweets from today: {current_tweet}\n"
+#     response = gen_model.generate_content([prompt])
+#     results = pd.concat([results, pd.DataFrame([{
+#         "ticker": ticker,
+#         "date_of_tweets": date,
+#         "prediction": response.text,
+#         "confidence": np.exp(response.candidates[0].avg_logprobs)
+#     }])], ignore_index=True)
+#     results.to_csv("gemini_sentiment_predictions.csv", index=False)
+#     time.sleep(4)
+#     print(date, response.text, np.exp(response.candidates[0].avg_logprobs))
 
 for date, tweets in coca_daily_tweets.items():
     ticker = "KO"
@@ -96,7 +97,8 @@ for date, tweets in coca_daily_tweets.items():
         "prediction": response.text,
         "confidence": np.exp(response.candidates[0].avg_logprobs)
     }])], ignore_index=True)
-    time.sleep(2)
+    results.to_csv("gemini_sentiment_predictions_others.csv", index=False)
+    time.sleep(4)
     print(date, response.text, np.exp(response.candidates[0].avg_logprobs))
 
 for date, tweets in visa_daily_tweets.items():
@@ -111,7 +113,8 @@ for date, tweets in visa_daily_tweets.items():
         "prediction": response.text,
         "confidence": np.exp(response.candidates[0].avg_logprobs)
     }])], ignore_index=True)
-    time.sleep(2)
+    results.to_csv("gemini_sentiment_predictions_others.csv", index=False)
+    time.sleep(4)
     print(date, response.text, np.exp(response.candidates[0].avg_logprobs))
 
 for date, tweets in exxon_daily_tweets.items():
@@ -126,7 +129,8 @@ for date, tweets in exxon_daily_tweets.items():
         "prediction": response.text,
         "confidence": np.exp(response.candidates[0].avg_logprobs)
     }])], ignore_index=True)
-    time.sleep(2)
+    results.to_csv("gemini_sentiment_predictions_others.csv", index=False)
+    time.sleep(4)
     print(date, response.text, np.exp(response.candidates[0].avg_logprobs))
 
 for date, tweets in tesla_daily_tweets.items():
@@ -141,9 +145,10 @@ for date, tweets in tesla_daily_tweets.items():
         "prediction": response.text,
         "confidence": np.exp(response.candidates[0].avg_logprobs)
     }])], ignore_index=True)
-    time.sleep(2)
+    results.to_csv("gemini_sentiment_predictions_others.csv", index=False)
+    time.sleep(4)
     print(date, response.text, np.exp(response.candidates[0].avg_logprobs))
 
-results.to_csv("gemini_sentiment_predictions.csv", index=False)
+results.to_csv("gemini_sentiment_predictions_others.csv", index=False)
 
 print("All predictions done")
