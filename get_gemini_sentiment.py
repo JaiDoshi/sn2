@@ -69,21 +69,21 @@ gen_model = genai.GenerativeModel(
 
 results = pd.DataFrame(columns=["ticker", "date_of_tweets", "prediction", "confidence"])
 
-# for date, tweets in apple_daily_tweets.items():
-#     ticker = "AAPL"
-#     current_tweet = " ".join(tweets)
-#     company_name = f"Apple Inc. ({ticker})"
-#     prompt = f"Predict the next-day price movement of the stock for {company_name} based on the following tweets. Your prediction should be binary, 1 for positive price movement and 0 for negative price movement. Only give the prediction as your response, nothing else. Here are the tweets from today: {current_tweet}\n"
-#     response = gen_model.generate_content([prompt])
-#     results = pd.concat([results, pd.DataFrame([{
-#         "ticker": ticker,
-#         "date_of_tweets": date,
-#         "prediction": response.text,
-#         "confidence": np.exp(response.candidates[0].avg_logprobs)
-#     }])], ignore_index=True)
-#     results.to_csv("gemini_sentiment_predictions.csv", index=False)
-#     time.sleep(4)
-#     print(date, response.text, np.exp(response.candidates[0].avg_logprobs))
+for date, tweets in apple_daily_tweets.items():
+    ticker = "AAPL"
+    current_tweet = " ".join(tweets)
+    company_name = f"Apple Inc. ({ticker})"
+    prompt = f"Predict the next-day price movement of the stock for {company_name} based on the following tweets. Your prediction should be binary, 1 for positive price movement and 0 for negative price movement. Only give the prediction as your response, nothing else. Here are the tweets from today: {current_tweet}\n"
+    response = gen_model.generate_content([prompt])
+    results = pd.concat([results, pd.DataFrame([{
+        "ticker": ticker,
+        "date_of_tweets": date,
+        "prediction": response.text,
+        "confidence": np.exp(response.candidates[0].avg_logprobs)
+    }])], ignore_index=True)
+    results.to_csv("gemini_sentiment_predictions.csv", index=False)
+    time.sleep(4)
+    print(date, response.text, np.exp(response.candidates[0].avg_logprobs))
 
 for date, tweets in coca_daily_tweets.items():
     ticker = "KO"
